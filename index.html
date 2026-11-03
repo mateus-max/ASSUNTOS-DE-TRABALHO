@@ -67,7 +67,7 @@ footer{text-align:center;color:#718096;font-size:12px;padding:0 16px 28px}
 <div class="grid">
 <div class="field full"><label for="topic">Tipo de assunto <span class="required">*</span></label><select id="topic" name="Tipo de assunto" required><option value="">Selecione o assunto</option><option>Solicitação de serviço</option><option>Pedido de informação</option><option>Assunto profissional / empresarial</option><option>Tradução ou interpretação</option><option>Viagem, imigração ou documentação</option><option>Parceria ou proposta comercial</option><option>Suporte técnico</option><option>Outro assunto</option></select></div>
 <div class="field full"><label for="details">Descrição detalhada <span class="required">*</span></label><textarea id="details" name="Descrição do assunto" minlength="10" maxlength="5000" required placeholder="Explique o seu pedido, dúvida ou solicitação..."></textarea></div>
-<div class="field full"><label for="attachments">Anexos da mensagem (opcional)</label><div class="upload"><input id="attachments" type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,video/*"><div id="fileList" class="hint">Pode anexar fotografias, documentos PDF/Word e vídeos. Após submeter o pedido, poderá partilhar os ficheiros pelo WhatsApp.</div></div></div>
+<div class="field full"><label for="attachments">Anexos da mensagem (opcional)</label><div class="upload"><input id="attachments" type="file" multiple accept="image/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,video/*"><div id="fileList" class="hint">Pode anexar fotografias, áudios, documentos e vídeos. Após submeter o pedido, poderá partilhar os ficheiros pelo WhatsApp.</div><div style="margin-top:14px;border-top:1px solid #dbe5ef;padding-top:14px"><strong style="font-size:14px;color:#173b60">Gravar áudio</strong><p class="hint">Grave uma explicação e junte-a ao pedido como ficheiro de áudio normal.</p><div style="display:flex;gap:9px;flex-wrap:wrap"><button class="btn btn-back" id="recordAudioBtn" type="button">● Gravar áudio</button><button class="btn btn-back" id="stopAudioBtn" type="button" disabled>■ Parar gravação</button></div><p id="recordStatus" class="hint" aria-live="polite">Nenhuma gravação iniciada.</p><audio id="audioPreview" controls hidden></audio></div></div></div>
 </div><div class="actions"><button class="btn btn-back" type="button">← Voltar</button><button class="btn btn-next" type="button">Continuar →</button></div>
 </section>
 <section class="step" data-step="3">
@@ -137,7 +137,7 @@ provinceSelect.addEventListener('change',()=>{resetCity('Selecione o município'
 updateCountryFields();
 let currentStep=0;function updateReview(){
 document.getElementById('reviewIdentity').textContent='Nome: '+document.getElementById('name').value+'\nWhatsApp: '+document.getElementById('whatsapp').value+'\nTelefone: '+(document.getElementById('phone').value||'Não indicado');
-document.getElementById('reviewLocation').textContent='País: '+document.getElementById('country').value+'\nProvíncia: '+provinceSelect.value+'\nMunicípio: '+citySelect.value+'\nBairro: '+(document.getElementById('neighborhood').value||'Não indicado');
+document.getElementById('reviewLocation').textContent='País: '+countrySelect.value+(countrySelect.value==='Angola'?'\nProvíncia: '+provinceSelect.value:'')+'\n'+(countrySelect.value==='Namíbia'?'Cidade: ':'Município: ')+citySelect.value+'\nBairro: '+(document.getElementById('neighborhood').value||'Não indicado');
 const files=[...document.getElementById('attachments').files].map(x=>x.name);
 document.getElementById('reviewSubject').textContent='Tipo: '+document.getElementById('topic').value+'\nDescrição: '+document.getElementById('details').value+'\nAnexos: '+(files.length?files.join(', '):'Nenhum');
 }
@@ -150,6 +150,33 @@ steps.forEach((step,index)=>{step.querySelectorAll('input:not([type=file]):not([
 document.querySelectorAll('.btn-back').forEach(b=>{if(b.id!=='recordBtn'&&b.id!=='stopBtn')b.addEventListener('click',()=>showStep(Math.max(0,currentStep-1)));});
 const details=document.getElementById('details');
 document.getElementById('attachments').addEventListener('change',e=>{const files=[...e.target.files];document.getElementById('fileList').textContent=files.length?files.map(x=>x.name).join(' · '):'Nenhum ficheiro seleccionado.';});
+let mediaRecorder=null,recordedChunks=[],recordedAudioUrl=null;
+const recordBtn=document.getElementById('recordAudioBtn'),stopBtn=document.getElementById('stopAudioBtn'),recordStatus=document.getElementById('recordStatus'),audioPreview=document.getElementById('audioPreview');
+recordBtn.addEventListener('click',async()=>{
+ if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){recordStatus.textContent='A gravação não é suportada neste navegador. Pode anexar um áudio já gravado.';return;}
+ try{
+  const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  const mime=['audio/webm;codecs=opus','audio/ogg;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported(t));
+  mediaRecorder=new MediaRecorder(stream,mime?{mimeType:mime}:{});
+  recordedChunks=[];
+  mediaRecorder.ondataavailable=e=>{if(e.data.size)recordedChunks.push(e.data);};
+  mediaRecorder.onstop=()=>{
+   const blob=new Blob(recordedChunks,{type:mediaRecorder.mimeType||'audio/webm'});
+   const ext=blob.type.includes('ogg')?'ogg':blob.type.includes('mp4')?'m4a':'webm';
+   const audioFile=new File([blob],'gravacao-audio-'+new Date().toISOString().replace(/[:.]/g,'-')+'.'+ext,{type:blob.type});
+   const input=document.getElementById('attachments'),dt=new DataTransfer();
+   [...input.files].forEach(f=>dt.items.add(f));dt.items.add(audioFile);input.files=dt.files;
+   if(recordedAudioUrl)URL.revokeObjectURL(recordedAudioUrl);
+   recordedAudioUrl=URL.createObjectURL(blob);audioPreview.src=recordedAudioUrl;audioPreview.hidden=false;
+   recordStatus.textContent='Gravação adicionada aos anexos: '+audioFile.name;
+   document.getElementById('fileList').textContent=[...input.files].map(f=>f.name).join(' · ');
+   stream.getTracks().forEach(t=>t.stop());
+  };
+  mediaRecorder.start();recordBtn.disabled=true;stopBtn.disabled=false;recordStatus.textContent='A gravar… Fale agora.';
+ }catch(err){recordStatus.textContent='Não foi possível aceder ao microfone. Autorize o acesso e tente novamente.';}
+});
+stopBtn.addEventListener('click',()=>{if(mediaRecorder&&mediaRecorder.state==='recording'){mediaRecorder.stop();recordBtn.disabled=false;stopBtn.disabled=true;}});
+
 form.addEventListener('submit',async e=>{
  e.preventDefault();if(!validStep(3))return;
  const submit=document.getElementById('submitBtn'),error=document.getElementById('errorBox');

@@ -57,9 +57,9 @@ footer{text-align:center;color:#718096;font-size:12px;padding:0 16px 28px}
 <section class="step" data-step="1">
 <div class="step-heading"><div class="step-number">02</div><div><h2>Localização</h2><p>Indique onde reside actualmente.</p></div></div>
 <div class="grid">
-<div class="field full"><label for="country">País <span class="required">*</span></label><select id="country" name="País" required><option value="">Selecione o país</option><option>Angola</option><option>Namíbia</option><option>Portugal</option><option>Brasil</option><option>Moçambique</option><option>África do Sul</option><option>República Democrática do Congo</option><option>Zâmbia</option><option>Outro</option></select></div>
-<div class="field"><label for="province">Província / Estado <span class="required">*</span></label><select id="province" name="Província ou Estado" required><option value="">Selecione a província</option></select></div>
-<div class="field"><label for="city">Município <span class="required">*</span></label><select id="city" name="Município" required disabled><option value="">Escolha primeiro a província</option></select></div><div class="field full"><label for="neighborhood">Bairro / Localidade (opcional)</label><input id="neighborhood" name="Bairro ou localidade" placeholder="Ex.: Santa Clara"></div>
+<div class="field full"><label for="country">País <span class="required">*</span></label><select id="country" name="País" required><option value="">Selecione o país</option><option value="Angola">Angola</option><option value="Namíbia">Namíbia</option></select></div>
+<div class="field" id="provinceField"><label for="province">Província <span class="required">*</span></label><select id="province" name="Província" required><option value="">Selecione a província</option></select></div>
+<div class="field"><label for="city" id="cityLabel">Município <span class="required">*</span></label><select id="city" name="Município" required disabled><option value="">Escolha primeiro a província</option></select></div><div class="field full"><label for="neighborhood">Bairro / Localidade (opcional)</label><input id="neighborhood" name="Bairro ou localidade" placeholder="Ex.: Santa Clara"></div>
 </div><div class="actions"><button class="btn btn-back" type="button">← Voltar</button><button class="btn btn-next" type="button">Continuar →</button></div>
 </section>
 <section class="step" data-step="2">
@@ -116,7 +116,24 @@ Object.keys(municipalities).sort((a,b)=>a.localeCompare(b,'pt')).forEach(p=>prov
 <script>
 const form=document.getElementById('requestForm'),steps=[...document.querySelectorAll('.step')],bar=document.getElementById('progressBar'),progressText=document.getElementById('progressText'),progressPercent=document.getElementById('progressPercent');
 const citySelect=document.getElementById('city');
-provinceSelect.addEventListener('change',()=>{citySelect.innerHTML='<option value="">Selecione o município</option>';(municipalities[provinceSelect.value]||[]).slice().sort((a,b)=>a.localeCompare(b,'pt')).forEach(m=>citySelect.add(new Option(m,m)));citySelect.disabled=citySelect.options.length===1;});
+const countrySelect=document.getElementById('country');
+const provinceField=document.getElementById('provinceField');
+const cityLabel=document.getElementById('cityLabel');
+const namibiaCities=['Windhoek','Walvis Bay','Swakopmund','Oshakati','Rundu','Otjiwarongo','Katima Mulilo','Gobabis','Keetmanshoop','Tsumeb','Ondangwa','Okahandja','Rehoboth','Mariental','Lüderitz','Oranjemund','Opuwo','Eenhana','Outapi','Grootfontein','Henties Bay','Usakos','Karibib','Arandis','Khorixas','Omaruru','Okakarara','Nkurenkuru','Divundu','Rundu'];
+function resetCity(placeholder){citySelect.innerHTML='<option value="">'+placeholder+'</option>';citySelect.disabled=true;}
+function updateCountryFields(){
+ const isNamibia=countrySelect.value==='Namíbia';
+ provinceField.hidden=isNamibia;
+ provinceSelect.required=!isNamibia;
+ provinceSelect.value='';
+ cityLabel.innerHTML=(isNamibia?'Cidade':'Município')+' <span class="required">*</span>';
+ citySelect.name=isNamibia?'Cidade':'Município';
+ resetCity(isNamibia?'Selecione a cidade':'Escolha primeiro a província');
+ if(isNamibia){namibiaCities.forEach(city=>citySelect.add(new Option(city,city)));citySelect.disabled=false;}
+}
+countrySelect.addEventListener('change',updateCountryFields);
+provinceSelect.addEventListener('change',()=>{resetCity('Selecione o município');(municipalities[provinceSelect.value]||[]).slice().sort((a,b)=>a.localeCompare(b,'pt')).forEach(m=>citySelect.add(new Option(m,m)));citySelect.disabled=citySelect.options.length===1;});
+updateCountryFields();
 let currentStep=0;function updateReview(){
 document.getElementById('reviewIdentity').textContent='Nome: '+document.getElementById('name').value+'\nWhatsApp: '+document.getElementById('whatsapp').value+'\nTelefone: '+(document.getElementById('phone').value||'Não indicado');
 document.getElementById('reviewLocation').textContent='País: '+document.getElementById('country').value+'\nProvíncia: '+provinceSelect.value+'\nMunicípio: '+citySelect.value+'\nBairro: '+(document.getElementById('neighborhood').value||'Não indicado');
@@ -137,9 +154,9 @@ form.addEventListener('submit',async e=>{
  const submit=document.getElementById('submitBtn'),error=document.getElementById('errorBox');
  submit.disabled=true;submit.textContent='A SUBMETER...';error.textContent='';
  const mode='Texto',files=[...document.getElementById('attachments').files];
- const message=['FICHA DE SOLICITAÇÃO — ASSUNTOS DE TRABALHO','Nome: '+document.getElementById('name').value,'WhatsApp: '+document.getElementById('whatsapp').value,'Telefone: '+(document.getElementById('phone').value||'Não indicado'),'País: '+document.getElementById('country').value,'Província: '+provinceSelect.value,'Município: '+citySelect.value,'Bairro: '+(document.getElementById('neighborhood').value||'Não indicado'),'Tipo de assunto: '+document.getElementById('topic').value,'Descrição: '+details.value.trim(),'Ficheiros seleccionados: '+(files.length?files.map(x=>x.name).join(', '):'Nenhum'),'Data: '+new Date().toLocaleString('pt-AO')].join('\n');
+ const message=['FICHA DE SOLICITAÇÃO — ASSUNTOS DE TRABALHO','Nome: '+document.getElementById('name').value,'WhatsApp: '+document.getElementById('whatsapp').value,'Telefone: '+(document.getElementById('phone').value||'Não indicado'),'País: '+countrySelect.value,...(countrySelect.value==='Angola'?['Província: '+provinceSelect.value]:[]),(countrySelect.value==='Namíbia'?'Cidade: ':'Município: ')+citySelect.value,'Bairro: '+(document.getElementById('neighborhood').value||'Não indicado'),'Tipo de assunto: '+document.getElementById('topic').value,'Descrição: '+details.value.trim(),'Ficheiros seleccionados: '+(files.length?files.map(x=>x.name).join(', '):'Nenhum'),'Data: '+new Date().toLocaleString('pt-AO')].join('\n');
  try{
-  const payload={_subject:'Nova solicitação | Escritório Online',message:message,'Nome completo':document.getElementById('name').value,'WhatsApp':document.getElementById('whatsapp').value,'Telefone':document.getElementById('phone').value||'Não indicado','País':document.getElementById('country').value,'Província':provinceSelect.value,'Município':citySelect.value,'Bairro':document.getElementById('neighborhood').value||'Não indicado','Tipo de assunto':document.getElementById('topic').value,'Descrição do assunto':details.value.trim(),'Anexos seleccionados':files.map(x=>x.name).join(', ')||'Nenhum'};
+  const payload={_subject:'Nova solicitação | Escritório Online',message:message,'Nome completo':document.getElementById('name').value,'WhatsApp':document.getElementById('whatsapp').value,'Telefone':document.getElementById('phone').value||'Não indicado','País':countrySelect.value,'Província':countrySelect.value==='Angola'?provinceSelect.value:'Não aplicável',[countrySelect.value==='Namíbia'?'Cidade':'Município']:citySelect.value,'Bairro':document.getElementById('neighborhood').value||'Não indicado','Tipo de assunto':document.getElementById('topic').value,'Descrição do assunto':details.value.trim(),'Anexos seleccionados':files.map(x=>x.name).join(', ')||'Nenhum'};
   const response=await fetch(form.action,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify(payload)});
   let result={};try{result=await response.json()}catch(_){}
   if(!response.ok)throw new Error(result.errors?.map(x=>x.message).join(', ')||result.error||'O Formspree recusou a solicitação. Verifique a ligação e tente novamente.');

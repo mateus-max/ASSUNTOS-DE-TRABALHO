@@ -39,18 +39,18 @@ footer{text-align:center;color:#718096;font-size:12px;padding:0 16px 28px}.requi
 <div class="field"><label for="phone">Número de telefone <span class="required">*</span></label><input id="phone" name="Telefone" type="tel" autocomplete="tel" required placeholder="+244 900 000 000"></div>
 <div class="field"><label for="whatsapp">Número de WhatsApp</label><input id="whatsapp" name="WhatsApp" type="tel" placeholder="+244 900 000 000"></div>
 <div class="field"><label for="country">País onde vive <span class="required">*</span></label><select id="country" name="País" required><option value="">Selecione o país</option><option>Angola</option><option>Namíbia</option><option>Portugal</option><option>Brasil</option><option>Moçambique</option><option>África do Sul</option><option>República Democrática do Congo</option><option>Zâmbia</option><option>Outro</option></select></div>
-<div class="field"><label for="province">Província / Estado</label><input id="province" name="Província ou Estado" placeholder="Ex.: Cunene"></div>
-<div class="field"><label for="city">Cidade / Município</label><input id="city" name="Cidade ou Município" placeholder="Ex.: Namacunde"></div>
+<div class="field"><label for="province">Província / Estado <span class="required">*</span></label><select id="province" name="Província ou Estado" required><option value="">Selecione a província</option></select></div>
+<div class="field"><label for="city">Município <span class="required">*</span></label><select id="city" name="Município" required disabled><option value="">Escolha primeiro a província</option></select></div>
 </div>
 <div class="section">02 · O assunto que pretende tratar</div>
 <div class="grid">
 <div class="field full"><label for="topic">Tipo de assunto <span class="required">*</span></label><select id="topic" name="Tipo de assunto" required><option value="">Selecione uma opção</option><option>Solicitação de serviço</option><option>Pedido de informação</option><option>Assunto profissional / empresarial</option><option>Tradução ou interpretação</option><option>Viagem, imigração ou documentação</option><option>Parceria ou proposta comercial</option><option>Suporte técnico</option><option>Outro assunto</option></select></div>
-<div class="field full"><label for="details">Descreva detalhadamente o seu assunto <span class="required">*</span></label><textarea id="details" name="Descrição do assunto" required minlength="10" maxlength="5000" placeholder="Explique o que pretende, os detalhes importantes e como podemos ajudar..."></textarea><small>Seja o mais claro possível para facilitar o atendimento.</small></div>
+<div class="field full"><label>Como prefere explicar o assunto? <span class="required">*</span></label><div class="audio"><label class="check"><input type="radio" name="Modo de descrição" value="Texto" checked> Escrever mensagem</label><label class="check"><input type="radio" name="Modo de descrição" value="Áudio"> Gravar áudio</label></div><div id="textMode" class="field"><label for="details">Escreva a sua mensagem</label><textarea id="details" name="Descrição do assunto" minlength="10" maxlength="5000" placeholder="Explique o que pretende, os detalhes importantes e como podemos ajudar..."></textarea></div><div id="audioMode" class="upload" hidden><div class="audio"><button class="btn secondary" type="button" id="recordBtn">● Gravar áudio</button><button class="btn secondary" type="button" id="stopBtn" disabled>Parar gravação</button><span id="recordStatus">Nenhuma gravação realizada.</span></div><audio id="audioPreview" controls hidden></audio><small>Grave a sua explicação. Depois de submeter, poderá partilhar o áudio pelo WhatsApp.</small></div></div>
 </div>
-<div class="section">03 · Anexos e gravação de áudio</div>
+<div class="section">03 · Anexos (opcional)</div>
 <div class="grid">
-<div class="field full"><label for="attachments">Carregar imagens, documentos, vídeos ou áudios</label><div class="upload"><input id="attachments" name="Anexos" type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,video/*,audio/*"><small>Até 10 ficheiros por envio, máximo de 25 MB por ficheiro. O limite total do pedido é 100 MB, conforme as condições do Formspree.</small><div id="fileList" class="hint"></div></div></div>
-<div class="field full"><label>Ou grave uma mensagem de voz</label><div class="upload"><div class="audio"><button class="btn secondary" type="button" id="recordBtn">● Gravar áudio</button><button class="btn secondary" type="button" id="stopBtn" disabled>Parar gravação</button><span id="recordStatus">Nenhuma gravação realizada.</span></div><audio id="audioPreview" controls hidden></audio><small>A gravação será anexada ao formulário como ficheiro de áudio. Permita o acesso ao microfone quando o navegador solicitar.</small></div></div>
+<div class="field full"><label for="attachments">Carregar imagens, documentos, vídeos ou áudios</label><div class="upload"><input id="attachments" name="Anexos" type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,video/*,audio/*"><small>Os anexos serão partilhados pelo menu de partilha do telemóvel depois de submeter. O Formspree actual não permite uploads neste formulário.</small><div id="fileList" class="hint"></div></div></div>
+
 </div>
 <div class="section">04 · Confirmação</div>
 <label class="check"><input type="checkbox" required><span>Confirmo que os dados fornecidos estão corretos e autorizo a sua utilização para responder a esta solicitação.</span></label>
@@ -59,8 +59,35 @@ footer{text-align:center;color:#718096;font-size:12px;padding:0 16px 28px}.requi
 </form></section></main>
 <footer>Assuntos de Trabalho · Atendimento online<br>Os seus dados serão utilizados para tratar a solicitação enviada.</footer>
 <script>
+const provinceSelect=document.getElementById('province'), citySelect=document.getElementById('city');
+const municipalities={
+"Bengo":["Ambriz","Bula Atumba","Dande","Dembos","Nambuangongo","Pango Aluquém","Barra do Dande","Panguila"],
+"Benguela":["Benguela","Lobito","Catumbela","Baía Farta","Balombo","Bocoio","Caimbambo","Chongorói","Cubal","Ganda","Navegantes"],
+"Bié":["Andulo","Camacupa","Catabola","Chinguar","Chitembo","Cuemba","Cunhinga","Cuito","Nharea"],
+"Cabinda":["Cabinda","Cacongo","Buco-Zau","Belize","Miconje","Massabi","Necuto","Tando Zinze","Liambo","Ngoio"],
+"Cuando":["Mavinga","Rivungo","Dirico","Cuito Cuanavale","Nancova","Cuchi","Calai","Cuangar","Caiundo"],
+"Cubango":["Menongue","Cuchi","Calai","Cuangar","Dirico","Longa","Mucusso","Savate","Cutato","Caiundo","Chinguanja"],
+"Cuanza Norte":["Cazengo","Ambaca","Banga","Bolongongo","Cambambe","Golungo Alto","Gonguembo","Lucala","Quiculungo","Samba Cajú","Ngonguembo"],
+"Cuanza Sul":["Sumbe","Amboim","Cassongue","Cela","Conda","Ebo","Libolo","Mussende","Porto Amboim","Quibala","Quilenda","Seles","Waku Kungo","Gabela"],
+"Cunene":["Cuanhama","Namacunde","Ombadja","Cahama","Cuvelai","Curoca","Nehone","Mupa","Evale","Naulila","Chitado","Ondjiva","Dombondola","Humbe"],
+"Huambo":["Huambo","Bailundo","Caála","Catchiungo","Chicala-Cholohanga","Chinjenje","Ecunha","Londuimbali","Longonjo","Mungo","Ucuma"],
+"Huíla":["Lubango","Matala","Caconda","Caluquembe","Chibia","Chicomba","Chipindo","Cuvango","Humpata","Jamba","Quilengues","Quipungo","Hoque"],
+"Icolo e Bengo":["Catete","Calumbo","Sequele","Bom Jesus","Cabiri","Cabo Ledo","Quiçama"],
+"Luanda":["Cacuaco","Cazenga","Ingombota","Kilamba Kiaxi","Maianga","Rangel","Samba","Sambizanga","Talatona","Viana","Belas","Camama","Kilamba","Mulenvos","Hoji ya Henda"],
+"Lunda Norte":["Chitato","Cambulo","Capenda-Camulemba","Caungula","Cuango","Cuilo","Lóvua","Lubalo","Lucapa","Xá-Muteba","Cafunfo","Mussungue"],
+"Lunda Sul":["Saurimo","Cacolo","Dala","Muconda","Cassengo"],
+"Malanje":["Malanje","Cacuso","Calandula","Cambundi-Catembo","Cangandala","Caombo","Cuaba Nzogo","Cunda-Dia-Baze","Luquembo","Marimba","Massango","Mucari","Quela","Quirima"],
+"Moxico":["Luena","Camanongue","Léua","Luau","Luchazes","Cameia","Lumeje","Alto Zambeze","Bundas","Lutembo","Lucusse","Cangamba"],
+"Moxico Leste":["Cazombo","Lóvua do Zambeze","Macondo","Lago Dilolo","Luacano","Ninda","Lumeje"],
+"Namibe":["Moçâmedes","Bibala","Camucuio","Tômbwa","Virei","Bentiaba","Lucira","Iona"],
+"Uíge":["Uíge","Alto Cauale","Ambuíla","Bembe","Buengas","Bungo","Damba","Milunga","Mucaba","Negage","Puri","Quimbele","Quitexe","Sanza Pombo","Songo","Zombo"],
+"Zaire":["Mbanza Kongo","Soyo","Nzeto","Tomboco","Cuimba","Nóqui","Luvo","Lufico","Quêlo","Serra de Canda","Quindeje"]};
+Object.keys(municipalities).sort((a,b)=>a.localeCompare(b,'pt')).forEach(p=>provinceSelect.add(new Option(p,p)));
+provinceSelect.addEventListener('change',()=>{citySelect.innerHTML='<option value="">Selecione o município</option>';(municipalities[provinceSelect.value]||[]).slice().sort((a,b)=>a.localeCompare(b,'pt')).forEach(m=>citySelect.add(new Option(m,m)));citySelect.disabled=citySelect.options.length===1;});
 const form=document.getElementById('requestForm'), filesInput=document.getElementById('attachments'), fileList=document.getElementById('fileList');
 const statusBox=document.getElementById('status'), submitBtn=document.getElementById('submitBtn');
+const textMode=document.getElementById('textMode'),audioMode=document.getElementById('audioMode'),details=document.getElementById('details');
+document.querySelectorAll('input[name="Modo de descrição"]').forEach(r=>r.addEventListener('change',()=>{const audio=r.checked&&r.value==='Áudio';textMode.hidden=audio;audioMode.hidden=!audio;details.required=!audio;if(audio)details.value='';else if(recorder&&recorder.state!=='inactive'){recorder.stop();recordBtn.disabled=false;stopBtn.disabled=true;}}));
 const recordBtn=document.getElementById('recordBtn'),stopBtn=document.getElementById('stopBtn'),recordStatus=document.getElementById('recordStatus'),preview=document.getElementById('audioPreview');
 let recorder=null,chunks=[],recordedFile=null,stream=null;
 filesInput.addEventListener('change',()=>{
@@ -86,21 +113,25 @@ recordBtn.addEventListener('click',async()=>{
 stopBtn.addEventListener('click',()=>{if(recorder&&recorder.state!=='inactive'){recorder.stop();recordBtn.disabled=false;stopBtn.disabled=true;}});
 form.addEventListener('submit',async e=>{
  e.preventDefault();statusBox.className='status';statusBox.textContent='';
- const files=[...filesInput.files];if(recordedFile)files.push(recordedFile);
- if(files.length>10){statusBox.className='status err';statusBox.textContent='Pode enviar no máximo 10 ficheiros, incluindo a gravação de áudio.';return;}
- if(files.some(f=>f.size>25*1024*1024)){statusBox.className='status err';statusBox.textContent='Cada ficheiro deve ter no máximo 25 MB.';return;}
- if(files.reduce((n,f)=>n+f.size,0)>95*1024*1024){statusBox.className='status err';statusBox.textContent='O total dos anexos é demasiado grande. Reduza o tamanho dos ficheiros e tente novamente.';return;}
+ const mode=document.querySelector('input[name="Modo de descrição"]:checked')?.value||'Texto';
+ if(mode==='Texto'&&details.value.trim().length<10){statusBox.className='status err';statusBox.textContent='Escreva pelo menos 10 caracteres ou escolha a opção de gravar áudio.';return;}
+ if(mode==='Áudio'&&!recordedFile){statusBox.className='status err';statusBox.textContent='Grave a sua mensagem de voz antes de submeter.';return;}
+ const attachments=[...filesInput.files];if(recordedFile&&mode==='Áudio')attachments.push(recordedFile);
  submitBtn.disabled=true;submitBtn.textContent='A ENVIAR...';
  try{
-  const data=new FormData(form);
-  data.delete('Anexos');
-  files.forEach(f=>data.append('Anexos',f,f.name));
-  const response=await fetch(form.action,{method:'POST',body:data,headers:{'Accept':'application/json'}});
+  const data=new FormData(form);data.delete('Anexos');if(mode==='Áudio')data.delete('Descrição do assunto');
+  const textData=new URLSearchParams();for(const [k,v] of data.entries())if(typeof v==='string')textData.append(k,v);
+  const response=await fetch(form.action,{method:'POST',body:textData,headers:{'Accept':'application/json','Content-Type':'application/x-www-form-urlencoded'}});
   let result={};try{result=await response.json()}catch(_){}
-  if(!response.ok)throw new Error(result.errors?.map(x=>x.message).join(', ')||'O serviço não aceitou o pedido. Verifique a configuração do Formspree e tente novamente.');
-  statusBox.className='status ok';statusBox.textContent='Pedido submetido com sucesso! Obrigado pelo contacto. A sua solicitação foi encaminhada. Se anexou ficheiros, eles ficam associados à submissão no Formspree.';
+  if(!response.ok)throw new Error(result.errors?.map(x=>x.message).join(', ')||'O serviço não aceitou o pedido. Tente novamente.');
+  const message=['NOVO PEDIDO — ASSUNTOS DE TRABALHO','Nome: '+document.getElementById('name').value,'Telefone: '+document.getElementById('phone').value,'WhatsApp: '+(document.getElementById('whatsapp').value||'Não indicado'),'País: '+document.getElementById('country').value,'Província: '+provinceSelect.value,'Município: '+citySelect.value,'Tipo: '+document.getElementById('topic').value,mode==='Texto'?'Descrição: '+details.value.trim():'Descrição: mensagem de voz gravada (anexar áudio nesta conversa).','Anexos selecionados: '+(attachments.length?attachments.map(f=>f.name).join(', '):'Nenhum')].join('\n');
+  statusBox.className='status ok';statusBox.textContent='Pedido registado com sucesso. A abrir o WhatsApp para encaminhar os detalhes. Se anexou ficheiros, seleccione WhatsApp no menu de partilha para os enviar junto com a mensagem.';
+  const waUrl='https://wa.me/244931057760?text='+encodeURIComponent(message);
+  if(attachments.length&&navigator.canShare&&navigator.canShare({files:attachments})){try{await navigator.share({title:'Pedido — Assuntos de Trabalho',text:message,files:attachments});}catch(err){window.location.href=waUrl;}}
+  else{window.location.href=waUrl;if(attachments.length)statusBox.textContent+=' Depois de abrir o WhatsApp, anexe os ficheiros manualmente.';}
   form.reset();recordedFile=null;preview.hidden=true;preview.removeAttribute('src');fileList.textContent='';recordStatus.textContent='Nenhuma gravação realizada.';
- }catch(err){statusBox.className='status err';statusBox.textContent='Não foi possível enviar: '+err.message+' Verifique a ligação à internet e tente novamente.';}
+  citySelect.innerHTML='<option value="">Escolha primeiro a província</option>';citySelect.disabled=true;textMode.hidden=false;audioMode.hidden=true;details.required=true;
+ }catch(err){statusBox.className='status err';statusBox.textContent='Não foi possível enviar: '+err.message;}
  finally{submitBtn.disabled=false;submitBtn.textContent='SUBMETER PEDIDO';}
 });
 </script>

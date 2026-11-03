@@ -167,12 +167,42 @@ form.addEventListener('submit',async e=>{
  const attachments=[...filesInput.files];if(recordedFile&&mode==='Áudio')attachments.push(recordedFile);
  submitBtn.disabled=true;submitBtn.textContent='A ENVIAR...';
  try{
-  const data=new FormData(form);data.delete('Anexos');if(mode==='Áudio')data.delete('Descrição do assunto');
-  const textData=new URLSearchParams();for(const [k,v] of data.entries())if(typeof v==='string')textData.append(k,v);
+  const submittedAt=new Date().toLocaleString('pt-AO',{dateStyle:'long',timeStyle:'short'});
+  const message=[
+   '━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+   '      ASSUNTOS DE TRABALHO',
+   '       FICHA DE SOLICITAÇÃO',
+   '━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+   '',
+   '01. IDENTIFICAÇÃO DO SOLICITANTE',
+   'Nome completo: '+document.getElementById('name').value,
+   'WhatsApp: '+(document.getElementById('whatsapp').value||'Não indicado'),
+   'Telefone: '+(document.getElementById('phone').value||'Não indicado'),
+   '',
+   '02. LOCALIZAÇÃO',
+   'País: '+document.getElementById('country').value,
+   'Província/Estado: '+provinceSelect.value,
+   'Município: '+citySelect.value,
+   '',
+   '03. ASSUNTO',
+   'Tipo de assunto: '+document.getElementById('topic').value,
+   'Modo de descrição: '+mode,
+   mode==='Texto'?'Descrição: '+details.value.trim():'Descrição: mensagem de áudio gravada (anexo partilhado separadamente).',
+   '',
+   '04. DOCUMENTOS ANEXADOS',
+   attachments.length?attachments.map((file,i)=>(i+1)+'. '+file.name).join('\n'):'Sem anexos.',
+   '',
+   'Data de submissão: '+submittedAt,
+   'Estado: RECEBIDO — AGUARDA TRATAMENTO',
+   '━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+   'Submetido através do escritório online.'
+  ].join('\n');
+  const textData=new URLSearchParams();
+  textData.set('_subject','Nova solicitação | Assuntos de Trabalho');
+  textData.set('Ficha de solicitação',message);
   const response=await fetch(form.action,{method:'POST',body:textData,headers:{'Accept':'application/json','Content-Type':'application/x-www-form-urlencoded'}});
   let result={};try{result=await response.json()}catch(_){}
   if(!response.ok)throw new Error(result.errors?.map(x=>x.message).join(', ')||'O serviço não aceitou o pedido. Tente novamente.');
-  const message=['NOVO PEDIDO — ASSUNTOS DE TRABALHO','Nome: '+document.getElementById('name').value,'Telefone: '+document.getElementById('phone').value,'WhatsApp: '+(document.getElementById('whatsapp').value||'Não indicado'),'País: '+document.getElementById('country').value,'Província: '+provinceSelect.value,'Município: '+citySelect.value,'Tipo: '+document.getElementById('topic').value,mode==='Texto'?'Descrição: '+details.value.trim():'Descrição: mensagem de voz gravada (anexar áudio nesta conversa).','Anexos selecionados: '+(attachments.length?attachments.map(f=>f.name).join(', '):'Nenhum')].join('\n');
   const waUrl='https://wa.me/244931057760?text='+encodeURIComponent(message);
   statusBox.className='status ok';
   statusBox.innerHTML='<strong>✓ Solicitação submetida com sucesso!</strong><br>A sua solicitação foi submetida ao escritório online do Senhor Eduardo Gabriel. Dentro em breve, ele próprio entrará em contacto consigo para dar seguimento e tratar pessoalmente do seu caso.'+(attachments.length?'<br><br>Para enviar os anexos, utilize o botão abaixo e partilhe os ficheiros pelo WhatsApp.':'<br><br>Se desejar, também pode contactar o escritório pelo WhatsApp.')+'<br><br><a id="continueWhatsApp" class="btn" style="display:inline-block;text-decoration:none;background:#079b42;color:white" href="'+waUrl+'">Continuar pelo WhatsApp</a>';

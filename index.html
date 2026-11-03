@@ -24,6 +24,45 @@ small,.hint{font-size:12px;color:var(--muted);line-height:1.5}.upload{padding:16
 .submit{width:100%;margin-top:24px;padding:16px;background:var(--gold);color:#15243a;font-size:16px}.status{display:none;margin-top:18px;padding:14px;border-radius:10px;font-size:14px;line-height:1.5}.status.ok{display:block;background:#e9f8ef;color:#17633a}.status.err{display:block;background:#fff0f0;color:#9b2525}
 footer{text-align:center;color:#718096;font-size:12px;padding:0 16px 28px}.required{color:#b42318}
 @media(max-width:620px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.top{padding-top:28px}}
+
+/* Apresentação visual renovada */
+body{background:linear-gradient(180deg,#eaf4fc 0,#f5f8fc 48%,#e8f3fb 100%)}
+.top{position:relative;overflow:hidden;padding:30px 18px 62px;background:linear-gradient(115deg,#061d3c,#07518b 58%,#082d58)}
+.top:after{content:"";position:absolute;width:330px;height:330px;border:1px solid #ffffff24;border-radius:50%;right:-80px;top:-160px;box-shadow:0 0 0 35px #ffffff0b,0 0 0 70px #ffffff08}
+.brand{font-size:14px;color:#f5d17e;letter-spacing:2.5px}
+h1{font-size:clamp(30px,5vw,46px);font-weight:850;letter-spacing:-1px}
+.top p{font-size:16px}
+main{max-width:1180px;margin:-36px auto 36px;position:relative}
+.card{border:1px solid #d5e6f6;border-radius:22px;padding:clamp(16px,2.8vw,30px);box-shadow:0 18px 50px #0c31501a}
+.intro{font-size:14px;margin-bottom:18px}
+.form-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px}
+.column{min-width:0;background:linear-gradient(145deg,#fff,#f8fbff);border:1px solid #e0eaf4;border-radius:17px;padding:18px}
+.section{display:flex;align-items:center;gap:12px;margin:15px 0 15px;padding:10px 14px;border:0;border-radius:10px;background:linear-gradient(90deg,#07538e,#07345f);color:white;font-size:16px;box-shadow:0 4px 12px #0b47751b}
+.section:first-child{margin-top:0}
+.section span{font-weight:800}
+.section em{font-style:normal;font-weight:500;font-size:13px}
+.grid{gap:14px}
+.field{gap:7px}
+label{font-size:14px;color:#132b4a}
+input,select,textarea{border:1px solid #aebfd1;border-radius:9px;background:#fff;padding:13px 14px}
+input:focus,select:focus,textarea:focus{border-color:#1672b5;box-shadow:0 0 0 3px #1672b51b}
+textarea{min-height:155px}
+.choice-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.choice{display:flex;align-items:center;gap:8px;border:1px solid #c8d8e9;border-radius:11px;padding:12px;background:#f4f8fd;font-weight:750}
+.choice input{width:auto;margin:0}
+.upload{background:#f5f9fe;border:1px dashed #7ba7d0;border-radius:12px;padding:14px}
+.upload-prompt{text-align:center;padding:18px 8px;margin:10px 0;border:1px dashed #3d8bca;border-radius:10px;color:#07518b}
+.upload-prompt strong{display:inline-block;margin-left:8px}
+.check{line-height:1.5}
+.confirm{margin-top:4px}
+.submit{background:linear-gradient(90deg,#08a83c,#00832b);color:#fff;border-radius:12px;box-shadow:0 7px 15px #008b3228;font-size:17px;letter-spacing:.2px}
+.status{font-weight:650}
+.status.ok{background:#e9f8ef;border:1px solid #a6dfb9;color:#125d32;padding:18px}
+.status.err{background:#fff0f0;border:1px solid #f2b7b7}
+footer{background:#092d53;color:#e5effa;padding:24px 16px}
+@media(max-width:760px){.form-columns{grid-template-columns:1fr}.column{padding:14px}.top{padding-bottom:55px}main{padding:0 12px}.choice-row{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.choice-row{grid-template-columns:1fr}.section{font-size:15px}}
+
 </style>
 </head>
 <body>
@@ -33,30 +72,39 @@ footer{text-align:center;color:#718096;font-size:12px;padding:0 16px 28px}.requi
 <form id="requestForm" action="https://formspree.io/f/xdeeykja" method="POST" enctype="multipart/form-data">
 <input type="hidden" name="_subject" value="Novo pedido — Assuntos de Trabalho">
 <input type="hidden" name="Origem" value="Formulário Assuntos de Trabalho">
-<div class="section">01 · Os seus dados</div>
+<div class="form-columns">
+<div class="column left-column">
+<div class="section">01 <span>Identificação do Solicitante</span></div>
 <div class="grid">
-<div class="field"><label for="name">Nome completo <span class="required">*</span></label><input id="name" name="Nome completo" autocomplete="name" required maxlength="120" placeholder="Como se chama?"></div>
-<div class="field"><label for="phone">Número de telefone <span class="required">*</span></label><input id="phone" name="Telefone" type="tel" autocomplete="tel" required placeholder="+244 900 000 000"></div>
-<div class="field"><label for="whatsapp">Número de WhatsApp</label><input id="whatsapp" name="WhatsApp" type="tel" placeholder="+244 900 000 000"></div>
-<div class="field"><label for="country">País onde vive <span class="required">*</span></label><select id="country" name="País" required><option value="">Selecione o país</option><option>Angola</option><option>Namíbia</option><option>Portugal</option><option>Brasil</option><option>Moçambique</option><option>África do Sul</option><option>República Democrática do Congo</option><option>Zâmbia</option><option>Outro</option></select></div>
-<div class="field"><label for="province">Província / Estado <span class="required">*</span></label><select id="province" name="Província ou Estado" required><option value="">Selecione a província</option></select></div>
-<div class="field"><label for="city">Município <span class="required">*</span></label><select id="city" name="Município" required disabled><option value="">Escolha primeiro a província</option></select></div>
+<div class="field full"><label for="name">Nome completo <span class="required">*</span></label><input id="name" name="Nome completo" autocomplete="name" required maxlength="120" placeholder="Digite o seu nome completo"></div>
+<div class="field"><label for="whatsapp">WhatsApp (com DDD) <span class="required">*</span></label><input id="whatsapp" name="WhatsApp" type="tel" required placeholder="Ex.: +244 931 057 760"></div>
+<div class="field"><label for="phone">Telefone (opcional)</label><input id="phone" name="Telefone" type="tel" autocomplete="tel" placeholder="Ex.: +244 923 000 000"></div>
 </div>
-<div class="section">02 · O assunto que pretende tratar</div>
+<div class="section">02 <span>Localização</span></div>
 <div class="grid">
-<div class="field full"><label for="topic">Tipo de assunto <span class="required">*</span></label><select id="topic" name="Tipo de assunto" required><option value="">Selecione uma opção</option><option>Solicitação de serviço</option><option>Pedido de informação</option><option>Assunto profissional / empresarial</option><option>Tradução ou interpretação</option><option>Viagem, imigração ou documentação</option><option>Parceria ou proposta comercial</option><option>Suporte técnico</option><option>Outro assunto</option></select></div>
-<div class="field full"><label>Como prefere explicar o assunto? <span class="required">*</span></label><div class="audio"><label class="check"><input type="radio" name="Modo de descrição" value="Texto" checked> Escrever mensagem</label><label class="check"><input type="radio" name="Modo de descrição" value="Áudio"> Gravar áudio</label></div><div id="textMode" class="field"><label for="details">Escreva a sua mensagem</label><textarea id="details" name="Descrição do assunto" minlength="10" maxlength="5000" placeholder="Explique o que pretende, os detalhes importantes e como podemos ajudar..."></textarea></div><div id="audioMode" class="upload" hidden><div class="audio"><button class="btn secondary" type="button" id="recordBtn">● Gravar áudio</button><button class="btn secondary" type="button" id="stopBtn" disabled>Parar gravação</button><span id="recordStatus">Nenhuma gravação realizada.</span></div><audio id="audioPreview" controls hidden></audio><small>Grave a sua explicação. Depois de submeter, poderá partilhar o áudio pelo WhatsApp.</small></div></div>
+<div class="field full"><label for="country">País <span class="required">*</span></label><select id="country" name="País" required><option value="">Selecione o país</option><option>Angola</option><option>Namíbia</option><option>Portugal</option><option>Brasil</option><option>Moçambique</option><option>África do Sul</option><option>República Democrática do Congo</option><option>Zâmbia</option><option>Outro</option></select></div>
+<div class="field full"><label for="province">Província / Estado <span class="required">*</span></label><select id="province" name="Província ou Estado" required><option value="">Selecione a província</option></select></div>
+<div class="field full"><label for="city">Município <span class="required">*</span></label><select id="city" name="Município" required disabled><option value="">Escolha primeiro a província</option></select></div>
 </div>
-<div class="section">03 · Anexos (opcional)</div>
+<div class="section">03 <span>Assunto do Pedido</span></div>
 <div class="grid">
-<div class="field full"><label for="attachments">Carregar imagens, documentos, vídeos ou áudios</label><div class="upload"><input id="attachments" name="Anexos" type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,video/*,audio/*"><small>Os anexos serão partilhados pelo menu de partilha do telemóvel depois de submeter. O Formspree actual não permite uploads neste formulário.</small><div id="fileList" class="hint"></div></div></div>
-
+<div class="field full"><label for="topic">Tipo de assunto <span class="required">*</span></label><select id="topic" name="Tipo de assunto" required><option value="">Selecione o assunto</option><option>Solicitação de serviço</option><option>Pedido de informação</option><option>Assunto profissional / empresarial</option><option>Tradução ou interpretação</option><option>Viagem, imigração ou documentação</option><option>Parceria ou proposta comercial</option><option>Suporte técnico</option><option>Outro assunto</option></select></div>
 </div>
-<div class="section">04 · Confirmação</div>
-<label class="check"><input type="checkbox" required><span>Confirmo que os dados fornecidos estão corretos e autorizo a sua utilização para responder a esta solicitação.</span></label>
-<button class="btn submit" id="submitBtn" type="submit">SUBMETER PEDIDO</button>
+</div>
+<div class="column right-column">
+<div class="section">04 <span>Descrição do Assunto</span></div>
+<div class="grid">
+<div class="field full"><label>Como pretende explicar? <span class="required">*</span></label><div class="choice-row"><label class="choice"><input type="radio" name="Modo de descrição" value="Texto" checked> ✍️ Escrever descrição</label><label class="choice"><input type="radio" name="Modo de descrição" value="Áudio"> 🎙️ Gravar áudio</label></div>
+<div id="textMode" class="field"><label for="details">Descrição detalhada <span class="required">*</span></label><textarea id="details" name="Descrição do assunto" minlength="10" maxlength="5000" placeholder="Explique o seu pedido, dúvida ou solicitação..."></textarea></div>
+<div id="audioMode" class="upload" hidden><div class="audio"><button class="btn secondary" type="button" id="recordBtn">● Gravar áudio</button><button class="btn secondary" type="button" id="stopBtn" disabled>Parar gravação</button><span id="recordStatus">Nenhuma gravação realizada.</span></div><audio id="audioPreview" controls hidden></audio><small>Grave a sua explicação. Depois poderá partilhar o áudio pelo WhatsApp.</small></div></div>
+</div>
+<div class="section">05 <span>Anexos <em>(Opcional)</em></span></div>
+<div class="grid"><div class="field full"><label for="attachments">Carregue imagens, documentos, vídeos ou áudios</label><div class="upload"><input id="attachments" name="Anexos" type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,video/*,audio/*"><div class="upload-prompt">☁️ <strong>Clique para anexar ficheiros</strong><br><small>Imagens, PDF, Word, vídeos e áudio</small></div><small>Os ficheiros serão partilhados pelo WhatsApp após o envio do pedido.</small><div id="fileList" class="hint"></div></div></div></div>
+<div class="section">06 <span>Confirmação</span></div>
+<label class="check confirm"><input type="checkbox" required><span>Confirmo que os dados fornecidos estão corretos e autorizo a sua utilização para responder a esta solicitação. <span class="required">*</span></span></label>
+<button class="btn submit" id="submitBtn" type="submit">➤ &nbsp; SUBMETER PEDIDO</button>
 <div id="status" class="status" role="status" aria-live="polite"></div>
-</form></section></main>
+</div></div></form></section></main>
 <footer>Assuntos de Trabalho · Atendimento online<br>Os seus dados serão utilizados para tratar a solicitação enviada.</footer>
 <script>
 const provinceSelect=document.getElementById('province'), citySelect=document.getElementById('city');
@@ -125,10 +173,11 @@ form.addEventListener('submit',async e=>{
   let result={};try{result=await response.json()}catch(_){}
   if(!response.ok)throw new Error(result.errors?.map(x=>x.message).join(', ')||'O serviço não aceitou o pedido. Tente novamente.');
   const message=['NOVO PEDIDO — ASSUNTOS DE TRABALHO','Nome: '+document.getElementById('name').value,'Telefone: '+document.getElementById('phone').value,'WhatsApp: '+(document.getElementById('whatsapp').value||'Não indicado'),'País: '+document.getElementById('country').value,'Província: '+provinceSelect.value,'Município: '+citySelect.value,'Tipo: '+document.getElementById('topic').value,mode==='Texto'?'Descrição: '+details.value.trim():'Descrição: mensagem de voz gravada (anexar áudio nesta conversa).','Anexos selecionados: '+(attachments.length?attachments.map(f=>f.name).join(', '):'Nenhum')].join('\n');
-  statusBox.className='status ok';statusBox.textContent='Pedido registado com sucesso. A abrir o WhatsApp para encaminhar os detalhes. Se anexou ficheiros, seleccione WhatsApp no menu de partilha para os enviar junto com a mensagem.';
   const waUrl='https://wa.me/244931057760?text='+encodeURIComponent(message);
-  if(attachments.length&&navigator.canShare&&navigator.canShare({files:attachments})){try{await navigator.share({title:'Pedido — Assuntos de Trabalho',text:message,files:attachments});}catch(err){window.location.href=waUrl;}}
-  else{window.location.href=waUrl;if(attachments.length)statusBox.textContent+=' Depois de abrir o WhatsApp, anexe os ficheiros manualmente.';}
+  statusBox.className='status ok';
+  statusBox.innerHTML='<strong>✓ Solicitação submetida com sucesso!</strong><br>A sua solicitação foi submetida ao escritório online do Senhor Eduardo Gabriel. Dentro em breve, ele próprio entrará em contacto consigo para dar seguimento e tratar pessoalmente do seu caso.'+(attachments.length?'<br><br>Para enviar os anexos, utilize o botão abaixo e partilhe os ficheiros pelo WhatsApp.':'<br><br>Se desejar, também pode contactar o escritório pelo WhatsApp.')+'<br><br><a id="continueWhatsApp" class="btn" style="display:inline-block;text-decoration:none;background:#079b42;color:white" href="'+waUrl+'">Continuar pelo WhatsApp</a>';
+  const continueWhatsApp=document.getElementById('continueWhatsApp');
+  continueWhatsApp.addEventListener('click',async ev=>{if(attachments.length&&navigator.canShare&&navigator.canShare({files:attachments})){ev.preventDefault();try{await navigator.share({title:'Pedido — Assuntos de Trabalho',text:message,files:attachments});}catch(_){window.open(waUrl,'_blank');}}});
   form.reset();recordedFile=null;preview.hidden=true;preview.removeAttribute('src');fileList.textContent='';recordStatus.textContent='Nenhuma gravação realizada.';
   citySelect.innerHTML='<option value="">Escolha primeiro a província</option>';citySelect.disabled=true;textMode.hidden=false;audioMode.hidden=true;details.required=true;
  }catch(err){statusBox.className='status err';statusBox.textContent='Não foi possível enviar: '+err.message;}

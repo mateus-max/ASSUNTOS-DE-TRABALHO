@@ -147,7 +147,7 @@ function validStep(n){const fields=[...steps[n].querySelectorAll('input,select,t
 document.querySelectorAll('.btn-next').forEach(b=>b.addEventListener('click',()=>{if(validStep(currentStep))showStep(Math.min(currentStep+1,steps.length-1));}));
 function autoAdvanceIfComplete(stepIndex){if(stepIndex!==currentStep||stepIndex>=steps.length-1)return;setTimeout(()=>{if(currentStep===stepIndex&&validStep(stepIndex))showStep(stepIndex+1);},350);}
 steps.forEach((step,index)=>{step.querySelectorAll('input:not([type=file]):not([type=radio]):not([type=checkbox]),select,textarea').forEach(el=>{el.addEventListener('change',()=>autoAdvanceIfComplete(index));el.addEventListener('blur',()=>autoAdvanceIfComplete(index));});});
-document.querySelectorAll('.btn-back').forEach(b=>{if(b.id!=='recordBtn'&&b.id!=='stopBtn')b.addEventListener('click',()=>showStep(Math.max(0,currentStep-1)));});
+document.querySelectorAll('.btn-back').forEach(b=>{if(!['recordBtn','stopBtn','recordAudioBtn','stopAudioBtn'].includes(b.id))b.addEventListener('click',()=>showStep(Math.max(0,currentStep-1)));});
 const details=document.getElementById('details');
 document.getElementById('attachments').addEventListener('change',e=>{const files=[...e.target.files];document.getElementById('fileList').textContent=files.length?files.map(x=>x.name).join(' · '):'Nenhum ficheiro seleccionado.';});
 let mediaRecorder=null,recordedChunks=[],recordedAudioUrl=null;

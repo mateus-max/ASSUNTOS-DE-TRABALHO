@@ -7,7 +7,7 @@
 <style>
 :root{--navy:#09294d;--blue:#07538e;--gold:#d7ad55;--ink:#172b45;--muted:#64748b;--line:#d7e3ef;--green:#079447}
 *{box-sizing:border-box}body{margin:0;background:#eef4fa;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-.hero{max-width:1160px;margin:24px auto 0;padding:0 18px}.hero-frame{height:clamp(230px,38vw,400px);border-radius:22px;overflow:hidden;position:relative;background:radial-gradient(circle at 78% 25%,#2776a4 0,#14517e 35%,#061d3b 80%);box-shadow:0 14px 35px #09294d26}
+.hero{display:none;max-width:1160px;margin:24px auto 0;padding:0 18px}.hero-frame{height:clamp(230px,38vw,400px);border-radius:22px;overflow:hidden;position:relative;background:radial-gradient(circle at 78% 25%,#2776a4 0,#14517e 35%,#061d3b 80%);box-shadow:0 14px 35px #09294d26}
 .hero-brand{position:absolute;top:clamp(18px,4vw,34px);left:clamp(18px,4vw,38px);display:flex;align-items:center;gap:12px;color:white;z-index:1}
 .brand-mark{width:54px;height:54px;border-radius:14px;background:#fff;display:grid;place-items:center;color:#09294d;font-size:28px;font-weight:950;letter-spacing:-5px;padding-right:5px;box-shadow:0 6px 20px #00152c44}
 .brand-mark span{color:#c79636}.brand-name{font-size:19px;font-weight:850;letter-spacing:.3px}.brand-name b{color:#e7c16f}.brand-name small{display:block;color:#eaf2fa;font-size:9px;letter-spacing:1px;margin-top:2px}
@@ -38,7 +38,7 @@ footer{text-align:center;color:#718096;font-size:12px;padding:0 16px 28px}
 @media(max-width:600px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.hero{padding:0 10px;margin-top:10px}.hero-frame{border-radius:14px}.card{padding:20px 16px}.choice-row{grid-template-columns:1fr}.actions .btn{padding:12px 14px}}
 </style></head>
 <body>
-<header class="hero"><div class="hero-frame"><div class="hero-brand"><div class="brand-mark">A<span>P</span></div><div class="brand-name">APSAN, <b>LDA</b><small>SOLUÇÕES QUE GERAM CONFIANÇA</small></div></div><div class="hero-overlay"><div class="hero-title">ASSUNTOS DE TRABALHO<span>ESCRITÓRIO ONLINE · Atendimento e solicitações</span></div></div></div></header>
+
 <main><section class="card" id="wizardCard">
 <div id="wizard">
 <div class="kicker">Atendimento online</div><h1>Envie a sua solicitação</h1><p class="intro">Preencha os seus dados por etapas. Ao concluir cada grupo, avance para o seguinte. No final, poderá submeter o seu assunto ao escritório.</p>

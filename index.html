@@ -75,6 +75,7 @@ footer{text-align:center;color:#718096;font-size:12px;padding:0 16px 28px}
 </section></main>
 <footer>Assuntos de Trabalho · Escritório Online</footer>
 <script>
+const provinceSelect=document.getElementById("province");
 const municipalities={
 "Bengo":["Ambriz","Bula Atumba","Dande","Dembos","Nambuangongo","Pango Aluquém","Barra do Dande","Panguila"],
 "Benguela":["Benguela","Lobito","Catumbela","Baía Farta","Balombo","Bocoio","Caimbambo","Chongorói","Cubal","Ganda","Navegantes"],
@@ -101,7 +102,7 @@ Object.keys(municipalities).sort((a,b)=>a.localeCompare(b,'pt')).forEach(p=>prov
 </script>
 <script>
 const form=document.getElementById('requestForm'),steps=[...document.querySelectorAll('.step')],bar=document.getElementById('progressBar'),progressText=document.getElementById('progressText'),progressPercent=document.getElementById('progressPercent');
-const provinceSelect=document.getElementById('province'),citySelect=document.getElementById('city');
+const citySelect=document.getElementById('city');
 provinceSelect.addEventListener('change',()=>{citySelect.innerHTML='<option value="">Selecione o município</option>';(municipalities[provinceSelect.value]||[]).slice().sort((a,b)=>a.localeCompare(b,'pt')).forEach(m=>citySelect.add(new Option(m,m)));citySelect.disabled=citySelect.options.length===1;});
 let currentStep=0;
 function showStep(n){currentStep=n;steps.forEach((s,i)=>s.classList.toggle('active',i===n));const pct=Math.round((n+1)/steps.length*100);bar.style.width=pct+'%';progressText.textContent='Etapa '+(n+1)+' de '+steps.length;progressPercent.textContent=pct+'%';document.getElementById('wizardCard').scrollIntoView({behavior:'smooth',block:'start'});}

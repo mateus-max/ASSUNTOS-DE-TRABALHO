@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10233f">
+<meta name="description" content="Envie o seu assunto de trabalho, pedido ou solicitação à nossa equipa.">
+<title>Assuntos de Trabalho | Atendimento Online</title>
+<style>
+:root{--navy:#10233f;--blue:#174a78;--gold:#d6a84f;--ink:#172235;--muted:#64748b;--line:#dce3ec;--bg:#f3f6fa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.top{background:linear-gradient(130deg,#0c1d35,#174a78);color:#fff;padding:34px 18px 68px}
+.wrap{max-width:820px;margin:auto}.brand{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#e8c77f;font-weight:800}
+h1{font-size:clamp(28px,5vw,42px);line-height:1.12;margin:12px 0}.top p{max-width:650px;color:#e4edf8;line-height:1.6;margin:0}
+main{max-width:820px;margin:-38px auto 50px;padding:0 16px}.card{background:white;border:1px solid var(--line);border-radius:20px;padding:clamp(20px,4vw,36px);box-shadow:0 16px 45px #142b4712}
+.intro{font-size:14px;color:var(--muted);line-height:1.6;margin:0 0 24px}.section{margin:28px 0 16px;padding-bottom:10px;border-bottom:1px solid var(--line);font-weight:800;color:var(--navy);font-size:17px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:17px}.field{display:flex;flex-direction:column;gap:7px}.full{grid-column:1/-1}label{font-size:14px;font-weight:700;color:#26364b}
+input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:13px 14px;font:inherit;color:var(--ink);background:#fff;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#2d6da5;box-shadow:0 0 0 3px #2d6da51a}textarea{min-height:145px;resize:vertical}
+small,.hint{font-size:12px;color:var(--muted);line-height:1.5}.upload{padding:16px;border:1px dashed #9aabc0;background:#f8fafc;border-radius:12px}
+.upload input{padding:9px;background:white}.audio{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.btn{border:0;border-radius:10px;padding:12px 16px;font-weight:750;cursor:pointer;background:var(--navy);color:#fff}.btn.secondary{background:#e8eef5;color:var(--navy)}.btn:disabled{opacity:.55;cursor:not-allowed}
+#recordStatus{font-size:13px;color:var(--muted)}#audioPreview{width:100%;margin-top:10px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#475569}.check input{width:auto;margin-top:3px}
+.submit{width:100%;margin-top:24px;padding:16px;background:var(--gold);color:#15243a;font-size:16px}.status{display:none;margin-top:18px;padding:14px;border-radius:10px;font-size:14px;line-height:1.5}.status.ok{display:block;background:#e9f8ef;color:#17633a}.status.err{display:block;background:#fff0f0;color:#9b2525}
+footer{text-align:center;color:#718096;font-size:12px;padding:0 16px 28px}.required{color:#b42318}
+@media(max-width:620px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.top{padding-top:28px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><div class="brand">Atendimento online</div><h1>Assuntos de Trabalho</h1><p>Estamos disponíveis para receber o seu pedido. Preencha os seus dados, explique o assunto e anexe os ficheiros que nos ajudam a compreender melhor a sua solicitação.</p></div></header>
+<main><section class="card">
+<p class="intro">Preencha os campos abaixo com atenção. Os campos assinalados com <span class="required">*</span> são obrigatórios. Depois de submeter, a sua solicitação será encaminhada através do nosso sistema de atendimento.</p>
+<form id="requestForm" action="https://formspree.io/f/xdeeykja" method="POST" enctype="multipart/form-data">
+<input type="hidden" name="_subject" value="Novo pedido — Assuntos de Trabalho">
+<input type="hidden" name="Origem" value="Formulário Assuntos de Trabalho">
+<div class="section">01 · Os seus dados</div>
+<div class="grid">
+<div class="field"><label for="name">Nome completo <span class="required">*</span></label><input id="name" name="Nome completo" autocomplete="name" required maxlength="120" placeholder="Como se chama?"></div>
+<div class="field"><label for="phone">Número de telefone <span class="required">*</span></label><input id="phone" name="Telefone" type="tel" autocomplete="tel" required placeholder="+244 900 000 000"></div>
+<div class="field"><label for="whatsapp">Número de WhatsApp</label><input id="whatsapp" name="WhatsApp" type="tel" placeholder="+244 900 000 000"></div>
+<div class="field"><label for="country">País onde vive <span class="required">*</span></label><select id="country" name="País" required><option value="">Selecione o país</option><option>Angola</option><option>Namíbia</option><option>Portugal</option><option>Brasil</option><option>Moçambique</option><option>África do Sul</option><option>República Democrática do Congo</option><option>Zâmbia</option><option>Outro</option></select></div>
+<div class="field"><label for="province">Província / Estado</label><input id="province" name="Província ou Estado" placeholder="Ex.: Cunene"></div>
+<div class="field"><label for="city">Cidade / Município</label><input id="city" name="Cidade ou Município" placeholder="Ex.: Namacunde"></div>
+</div>
+<div class="section">02 · O assunto que pretende tratar</div>
+<div class="grid">
+<div class="field full"><label for="topic">Tipo de assunto <span class="required">*</span></label><select id="topic" name="Tipo de assunto" required><option value="">Selecione uma opção</option><option>Solicitação de serviço</option><option>Pedido de informação</option><option>Assunto profissional / empresarial</option><option>Tradução ou interpretação</option><option>Viagem, imigração ou documentação</option><option>Parceria ou proposta comercial</option><option>Suporte técnico</option><option>Outro assunto</option></select></div>
+<div class="field full"><label for="details">Descreva detalhadamente o seu assunto <span class="required">*</span></label><textarea id="details" name="Descrição do assunto" required minlength="10" maxlength="5000" placeholder="Explique o que pretende, os detalhes importantes e como podemos ajudar..."></textarea><small>Seja o mais claro possível para facilitar o atendimento.</small></div>
+</div>
+<div class="section">03 · Anexos e gravação de áudio</div>
+<div class="grid">
+<div class="field full"><label for="attachments">Carregar imagens, documentos, vídeos ou áudios</label><div class="upload"><input id="attachments" name="Anexos" type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,video/*,audio/*"><small>Até 10 ficheiros por envio, máximo de 25 MB por ficheiro. O limite total do pedido é 100 MB, conforme as condições do Formspree.</small><div id="fileList" class="hint"></div></div></div>
+<div class="field full"><label>Ou grave uma mensagem de voz</label><div class="upload"><div class="audio"><button class="btn secondary" type="button" id="recordBtn">● Gravar áudio</button><button class="btn secondary" type="button" id="stopBtn" disabled>Parar gravação</button><span id="recordStatus">Nenhuma gravação realizada.</span></div><audio id="audioPreview" controls hidden></audio><small>A gravação será anexada ao formulário como ficheiro de áudio. Permita o acesso ao microfone quando o navegador solicitar.</small></div></div>
+</div>
+<div class="section">04 · Confirmação</div>
+<label class="check"><input type="checkbox" required><span>Confirmo que os dados fornecidos estão corretos e autorizo a sua utilização para responder a esta solicitação.</span></label>
+<button class="btn submit" id="submitBtn" type="submit">SUBMETER PEDIDO</button>
+<div id="status" class="status" role="status" aria-live="polite"></div>
+</form></section></main>
+<footer>Assuntos de Trabalho · Atendimento online<br>Os seus dados serão utilizados para tratar a solicitação enviada.</footer>
+<script>
+const form=document.getElementById('requestForm'), filesInput=document.getElementById('attachments'), fileList=document.getElementById('fileList');
+const statusBox=document.getElementById('status'), submitBtn=document.getElementById('submitBtn');
+const recordBtn=document.getElementById('recordBtn'),stopBtn=document.getElementById('stopBtn'),recordStatus=document.getElementById('recordStatus'),preview=document.getElementById('audioPreview');
+let recorder=null,chunks=[],recordedFile=null,stream=null;
+filesInput.addEventListener('change',()=>{
+ const files=[...filesInput.files]; fileList.textContent=files.length?files.map(f=>f.name+' ('+(f.size/1024/1024).toFixed(1)+' MB)').join(' · '):'';
+});
+recordBtn.addEventListener('click',async()=>{
+ if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){recordStatus.textContent='Este navegador não permite gravar áudio. Use o carregamento de ficheiros.';return;}
+ try{
+  stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  const mime=['audio/webm;codecs=opus','audio/webm','audio/mp4'].find(t=>MediaRecorder.isTypeSupported(t));
+  recorder=new MediaRecorder(stream,mime?{mimeType:mime}:{});
+  chunks=[];recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+  recorder.onstop=()=>{
+   const type=recorder.mimeType||'audio/webm',ext=type.includes('mp4')?'m4a':'webm';
+   recordedFile=new File(chunks,'mensagem-de-voz.'+ext,{type});
+   preview.src=URL.createObjectURL(recordedFile);preview.hidden=false;
+   recordStatus.textContent='Gravação pronta: '+(recordedFile.size/1024/1024).toFixed(2)+' MB.';
+   stream?.getTracks().forEach(t=>t.stop());stream=null;
+  };
+  recorder.start();recordBtn.disabled=true;stopBtn.disabled=false;recordStatus.textContent='A gravar... fale agora.';
+ }catch(e){recordStatus.textContent='Não foi possível aceder ao microfone. Verifique a permissão do navegador.';}
+});
+stopBtn.addEventListener('click',()=>{if(recorder&&recorder.state!=='inactive'){recorder.stop();recordBtn.disabled=false;stopBtn.disabled=true;}});
+form.addEventListener('submit',async e=>{
+ e.preventDefault();statusBox.className='status';statusBox.textContent='';
+ const files=[...filesInput.files];if(recordedFile)files.push(recordedFile);
+ if(files.length>10){statusBox.className='status err';statusBox.textContent='Pode enviar no máximo 10 ficheiros, incluindo a gravação de áudio.';return;}
+ if(files.some(f=>f.size>25*1024*1024)){statusBox.className='status err';statusBox.textContent='Cada ficheiro deve ter no máximo 25 MB.';return;}
+ if(files.reduce((n,f)=>n+f.size,0)>95*1024*1024){statusBox.className='status err';statusBox.textContent='O total dos anexos é demasiado grande. Reduza o tamanho dos ficheiros e tente novamente.';return;}
+ submitBtn.disabled=true;submitBtn.textContent='A ENVIAR...';
+ try{
+  const data=new FormData(form);
+  data.delete('Anexos');
+  files.forEach(f=>data.append('Anexos',f,f.name));
+  const response=await fetch(form.action,{method:'POST',body:data,headers:{'Accept':'application/json'}});
+  let result={};try{result=await response.json()}catch(_){}
+  if(!response.ok)throw new Error(result.errors?.map(x=>x.message).join(', ')||'O serviço não aceitou o pedido. Verifique a configuração do Formspree e tente novamente.');
+  statusBox.className='status ok';statusBox.textContent='Pedido submetido com sucesso! Obrigado pelo contacto. A sua solicitação foi encaminhada. Se anexou ficheiros, eles ficam associados à submissão no Formspree.';
+  form.reset();recordedFile=null;preview.hidden=true;preview.removeAttribute('src');fileList.textContent='';recordStatus.textContent='Nenhuma gravação realizada.';
+ }catch(err){statusBox.className='status err';statusBox.textContent='Não foi possível enviar: '+err.message+' Verifique a ligação à internet e tente novamente.';}
+ finally{submitBtn.disabled=false;submitBtn.textContent='SUBMETER PEDIDO';}
+});
+</script>
+</body></html>

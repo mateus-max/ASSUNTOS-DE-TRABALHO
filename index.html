@@ -120,7 +120,7 @@ const citySelect=document.getElementById('city');
 provinceSelect.addEventListener('change',()=>{citySelect.innerHTML='<option value="">Selecione o município</option>';(municipalities[provinceSelect.value]||[]).slice().sort((a,b)=>a.localeCompare(b,'pt')).forEach(m=>citySelect.add(new Option(m,m)));citySelect.disabled=citySelect.options.length===1;});
 let currentStep=0;function updateReview(){
 const mode=document.querySelector('input[name="Modo de descrição"]:checked').value;
-document.getElementById('reviewIdentity').textContent='Nome: '+document.getElementById('name').value+'\\nWhatsApp: '+document.getElementById('whatsapp').value+'\\nTelefone: '+(document.getElementById('phone').value||'Não indicado')+'\\nE-mail: '+(document.getElementById('email').value||'Não indicado');
+document.getElementById('reviewIdentity').textContent='Nome: '+document.getElementById('name').value+'\\nWhatsApp: '+document.getElementById('whatsapp').value+'\\nTelefone: '+(document.getElementById('phone').value||'Não indicado');
 document.getElementById('reviewLocation').textContent='País: '+document.getElementById('country').value+'\\nProvíncia: '+provinceSelect.value+'\\nMunicípio: '+citySelect.value+'\\nBairro: '+(document.getElementById('neighborhood').value||'Não indicado');
 document.getElementById('reviewSubject').textContent='Tipo: '+document.getElementById('topic').value+'\\nDescrição: '+(mode==='Texto'?document.getElementById('details').value:'Mensagem de áudio gravada.');
 }

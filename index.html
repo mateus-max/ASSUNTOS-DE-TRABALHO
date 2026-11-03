@@ -84,7 +84,7 @@ footer{text-align:center;color:#718096;font-size:12px;padding:0 16px 28px}
 <div id="errorBox" class="hint" role="alert" style="color:#b42318;margin-top:14px"></div>
 </section>
 </form></div>
-<div class="success" id="successPage" role="status" aria-live="polite"><div class="success-icon">✓</div><h2>Solicitação enviada com sucesso!</h2><p>A sua solicitação foi enviada com sucesso ao escritório online do Senhor Advogado. Ele poderá entrar em contacto consigo o mais breve possível para dar tratamento pessoal ao seu assunto.</p><button class="btn btn-next" id="shareAttachmentsBtn" type="button" hidden style="margin:22px auto 0">Partilhar anexos pelo WhatsApp</button><p id="shareHint" class="hint" hidden style="margin-top:10px">Os anexos são partilhados separadamente, pois o formulário Formspree não tem carregamento de ficheiros activado.</p></div>
+<div class="success" id="successPage" role="status" aria-live="polite"><div class="success-icon">✓</div><h2>Solicitação enviada com sucesso!</h2><p>A sua solicitação foi enviada com sucesso ao escritório online do Senhor Advogado. Ele poderá entrar em contacto consigo o mais breve possível para dar tratamento pessoal ao seu assunto.</p><button class="btn btn-next" id="shareAttachmentsBtn" type="button" hidden style="margin:22px auto 0">Partilhar anexos pelo WhatsApp</button><p id="shareHint" class="hint" hidden style="margin-top:10px">Os anexos são partilhados separadamente, pois o formulário Formspree não tem carregamento de ficheiros activado.</p><button class="btn btn-next" id="newRequestBtn" type="button" style="margin:24px auto 0">Nova solicitação / Próximo cliente</button></div>
 </section></main>
 <footer>Assuntos de Trabalho · Escritório Online</footer>
 
@@ -150,7 +150,7 @@ steps.forEach((step,index)=>{step.querySelectorAll('input:not([type=file]):not([
 document.querySelectorAll('.btn-back').forEach(b=>{if(!['recordBtn','stopBtn','recordAudioBtn','stopAudioBtn'].includes(b.id))b.addEventListener('click',()=>showStep(Math.max(0,currentStep-1)));});
 const details=document.getElementById('details');
 document.getElementById('attachments').addEventListener('change',e=>{const files=[...e.target.files];document.getElementById('fileList').textContent=files.length?files.map(x=>x.name).join(' · '):'Nenhum ficheiro seleccionado.';});
-let mediaRecorder=null,recordedChunks=[],recordedAudioUrl=null;
+let mediaRecorder=null,recordedChunks=[],recordedAudioUrl=null,pendingShareFiles=[];
 const recordBtn=document.getElementById('recordAudioBtn'),stopBtn=document.getElementById('stopAudioBtn'),recordStatus=document.getElementById('recordStatus'),audioPreview=document.getElementById('audioPreview');
 recordBtn.addEventListener('click',async()=>{
  if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){recordStatus.textContent='A gravação não é suportada neste navegador. Pode anexar um áudio já gravado.';return;}
@@ -188,17 +188,20 @@ form.addEventListener('submit',async e=>{
   const response=await fetch(form.action,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify(payload)});
   let result={};try{result=await response.json()}catch(_){}
   if(!response.ok)throw new Error(result.errors?.map(x=>x.message).join(', ')||result.error||'O Formspree recusou a solicitação. Verifique a ligação e tente novamente.');
+  pendingShareFiles=files.slice();
   document.getElementById('wizard').style.display='none';document.getElementById('successPage').classList.add('show');
   if(files.length){document.getElementById('shareAttachmentsBtn').hidden=false;document.getElementById('shareHint').hidden=false;}
+  form.reset();updateCountryFields();
   document.getElementById('wizardCard').scrollIntoView({behavior:'smooth',block:'start'});
  }catch(err){error.textContent='Erro ao enviar: '+err.message;submit.disabled=false;submit.textContent='SUBMETER SOLICITAÇÃO';}
 });
 document.getElementById('shareAttachmentsBtn').addEventListener('click',async()=>{
- const files=[...document.getElementById('attachments').files];
+ const files=pendingShareFiles.slice();
  const shareText='Anexos da solicitação enviada ao escritório online.';
  if(!files.length)return;
  try{if(navigator.canShare&&navigator.canShare({files})){await navigator.share({title:'Anexos — Assuntos de Trabalho',text:shareText,files});}
  else{alert('Este navegador não permite partilhar estes ficheiros em conjunto. Abra o WhatsApp e anexe-os manualmente.');}}
  catch(err){if(err.name!=='AbortError')alert('Não foi possível abrir a partilha. Pode anexar os ficheiros manualmente no WhatsApp.');}
 });
+document.getElementById('newRequestBtn').addEventListener('click',()=>{pendingShareFiles=[];document.getElementById('successPage').classList.remove('show');document.getElementById('wizard').style.display='block';form.reset();updateCountryFields();document.getElementById('fileList').textContent='Pode anexar fotografias, áudios, documentos e vídeos.';document.getElementById('errorBox').textContent='';document.getElementById('submitBtn').disabled=false;document.getElementById('submitBtn').textContent='SUBMETER SOLICITAÇÃO';document.getElementById('shareAttachmentsBtn').hidden=true;document.getElementById('shareHint').hidden=true;showStep(0);});
 </script></body></html>
